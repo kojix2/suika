@@ -24,7 +24,7 @@ module Suika
   class Tagger
     # Create a new tagger by loading the built-in binary dictionary.
     def initialize
-      raise IOError, 'SHA1 digest of dictionary file does not match.' unless DICTIONARY_KEY == Digest::SHA1.file(DICTIONARY_PATH).to_s
+      raise IOError, 'SHA1 digest of dictionary file does not match.' unless Digest::SHA1.file(DICTIONARY_PATH).to_s == DICTIONARY_KEY
 
       @sysdic = Marshal.load(Zlib::GzipReader.open(DICTIONARY_PATH, &:read))
       @trie = DartsClone::DoubleArray.new
@@ -34,7 +34,7 @@ module Suika
     # Parse the given sentence.
     # @param sentence [String] Japanese text to be parsed.
     # @return [Array<String>]
-    def parse(sentence)
+    def parse(sentence) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       lattice = Lattice.new(sentence.length)
       start = 0
       terminal = sentence.length
